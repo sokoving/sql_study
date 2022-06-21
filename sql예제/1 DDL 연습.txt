@@ -1,0 +1,19 @@
+▶ DDL(Data Definition Language)
+CREATE, ALTER, DROP, RENAME, TRUMCATE
+
+▶ 제약조건
+- 기본 키(Primary Key)
+
+- CREATE TABLE 테이블명();
+테이블 명
+ 단수형 권고( 직원이 여러 명 들어가는 테이블이더라도 단수형(employee)_
+ 보통은 회사에서 지정하는 양식이 있음
+
+- 테이블의 model
+P : Primary Key
+F : Foreign Key 
+
+- ALTER 명령어 주의: DROP만 COLUMN을 붙인다
+ALTER TABLE reply  ADD (r_reg_date DATE DEFAULT SYSDATE);
+ALTER TABLE board DROP COLUMN view_count;
+ALTER TABLE board MODIFY (title VARCHAR2(500));

@@ -1,0 +1,36 @@
+▶ SQL 기본
+▷ 대소문자 구분하지 않으나 명령어는 대문자를 권고한다
+▷ 주석 :  --
+▷ ctrl + enter
+ - 커서가 위치한 명령어 단위로 실행됨
+ - 명령어는 세미콜론으로 닫는다
+ - 전체 실행은 없음
+ - 이미 실행된 명령어는 내용을 수정해도 되돌릴 수 없고 수정 명령어를 써야 한다
+
+▶ 주요 데이터 타입
+  : 선언 유형이 아닌 다른 종류의 데이터가 들어오면 에러 발생
+CHAR : 고정 길이, 문자열 적게 저장하면 채운다
+VARCHAR2 : 가변길이, 적게 저장하면 저장한 만큼 채운다
+                4000byte까지 그 이상은 CLOB(?)
+NUMBER(L, D): L은 D(소숫점) 자리를 포함한 전체 길이
+
+▶ 제약조건
+- 기본 키(Primary Key)
+
+
+▶ DDL(Data Definition Language)
+CREATE, ALTER, DROP, RENAME, TRUMCATE
+
+- CREATE TABLE 테이블명();
+테이블 명
+ 단수형 권고( 직원이 여러 명 들어가는 테이블이더라도 단수형(employee)_
+ 보통은 회사에서 지정하는 양식이 있음
+
+- 테이블의 model
+P : Primary Key
+F : Foreign Key 
+
+- ALTER 명령어 주의: DROP만 COLUMN을 붙인다
+ALTER TABLE reply  ADD (r_reg_date DATE DEFAULT SYSDATE);
+ALTER TABLE board DROP COLUMN view_count;
+ALTER TABLE board MODIFY (title VARCHAR2(500));
