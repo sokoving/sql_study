@@ -64,96 +64,35 @@ ROLLBACK;
 
 ------------------------------------------------------------------
 
-## SAVE POINT : 저장점 정의
-- 롤백할 때 원
+## 4. SAVE POINT : 저장점 정의
+- 현 시점부터 세이브 포인트 중에서 트랜잭션의 일부만 롤백할 수 있다
+- 복잡한 대규모 트랜잭션에서 에러가 발생했을 때
+ + 세이브 포인트까지만 되돌리고 실패한 부분에 대해서만 다시 실행할 수 잇게 한다
+```
+SAVEPOINT sv1;
 
-------------------------------------------------------------------
+INSERT INTO tb_certi (certi_cd, certi_nm) VALUES ('100022', 'SQL강의자', '정보보호학원);
+UPDATE tb_certi SET certi_nm = 'SQL경험보유자' WHERE certi_cd = '100022';
 
-## 3. DELETE : 데이터 삭제
-- SELECT * FROM과 달리 DELETE FROM 사이에 아무것도 안 들어감
- ```
-DELETE FROM board 
-WHERE bno=1;
-```
+ROLLBACK TO sv1; -- sv1로 롤백, INSERT, UPDATE는 롤백
 
-### 전체 데이터 삭제
-1. WHERE절을 생략한 DELETE절
-- 롤백 가능, 수동 커밋 가능, 로그 남기기 가능
-```
-DELETE FROM board;
-```
-
-2. TRUMCATE TABLE
-- 롤백 불가능, 자동 커밋, 로그를 남길 수 없음
-- 테이블 생성 초기 상태로 복귀
-> 주의: 데이터가 있다면 모두 없어지고 롤백할 수 없다
-```
-TRUNCATE TABLE board;
-```
-
-3. DROP TABLE
-- 롤백 불가능, 자동 커밋, 로그를 남길 수 없음
-- 테이블 생성 초기 상태로 복귀, 구조(컬럼 포함)까지 완전 삭제
-```
-DROP TABLE board;
+DELETE FROM tb_certi WHERE certi_cd = '100022' -- 롤백 > 100022 데이터는 존재하지 않음
 ```
 ------------------------------------------------------------------
 
-## 4. SELECT : 조회
-### 기본
-```
-SELECT
-emp_no, emp_nm     -- 컬럼 이름
-FROM tb_emp;       -- 테이블 이름
+## 5. 정리
+- 테이블 데이터가 변경되는 insert, update, delete 수행 시
+ + 변경되는 데이터의 *무결성을 보장*하는 것이 커밋과 롤백의 목적
+- 커밋: 변경된 데이터를 테이블에 영구적으로 반영해라
+- 롤백: 변경 전으로 돌아가라
+- 세이브 포인트: 데이터 변경을 사전에 지정한 저장점까지만 롤백해라
+- 트랜젝션은 SQL 문장을 실행하면 자동 시작하고
+ + 커밋, 롤백을 실행한 시점에서 종료
 
-SELECT
-certi_nm, certi_cd -- 테이블 컬럼 순서와 상관없다
-FROM tb_certi;
-
-SELECT
-*                  -- 테이블의 모든 컬럼 조회
-FROM tb_dept;
-```
-### SELECT DISTINCT
-- SELECT ALL : 기본값 > 중복 포함 20행 출력
-- SELECT DISTINCT : 중복값을 제외하고 조회 > 6행 출력
-```
-- SELECT DISTINCT
-issue_insti_nm  
-FROM tb_certi;
-
-SELECT DISTINCT
-certi_cd, issue_insti_nm   -- 주의사항: 컬럼이 복수 이상이면 열 단위로 중복 체크
-FROM tb_certi;
-```
-
-### 열 별칭(column alias) 지정
-```
-SELECT
-certi_cd AS "자격증 코드"  -- "띄어쓰기가 있을 경우 쌍따옴표"
-, certi_nm AS 자격증명      -- 띄어쓰기 없을 경우 쌍따옴표 생략 가능
-, issue_insti_nm 발급기관명 -- AS 항상 생략 가능
-FROM tb_certi;
-```
-
-### 문자열 결합 연산자 ||
-- ex) SQLD(100001) - 한국데이터베이스진흥원
-```
-- SELECT
-certi_nm || '(' || certi_cd || ') - ' || issue_insti_nm AS "자격증 정보"
-FROM tb_certi;
-```
-
-### dual
-- 오라클에서 제공하는 더미 테이블 
-- 단순 연산 결과를 조회할 때 사용한다
-```
-SELECT
-3 * 6 AS "연산 결과"
-FROM dual;
-
-SELECT
-SYSDATE AS "현재 날짜"
-FROM dual;
-    
-```
+## 6. 자동 커밋
+1. DDL 문장 실행 시 전후로 자동 커밋
+  + CREATE, ALTER, DROP, RENAME, TRUNCATE TABLE
+2. DML 문장 이후 커밋 없이 DDL 문장 실행 시
+ DDL 수행 전에 자동 커밋
+3. 데이터베이스 정상 접속 종료 시 자동 커밋
+ + 비정상 접속 중단 시 자동 롤백
