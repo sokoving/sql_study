@@ -2,9 +2,14 @@
 - [CREATE], [ALTER], [DROP], [RENAME], [TRUNCATE]
 - 데이터 구조를 정의하는 명령어
 - 데이터 구조를 생성(CREATE), 변경(ALTER), 삭제(DROP, TRUNCATE), 이름을 변경(RENAME)한다
+-----------------------------------------------------------------
+# 메모
+## PK 설정
 
+
+------------------------------------------------------------------
 ## 1. CREATE TABLE: 테이블을 생성
-```
+``` CREATE TABLE 테이블명 (컬럼명 제약조건 나열);
 CREATE TABLE board (                          -- board 테이블 생성
     bno NUMBER(10)                            -- 글번호 : 10btye 고정
     , title VARCHAR2(200) NOT NULL            -- 글제목 : 200byte까지, 필수 작성
@@ -27,10 +32,28 @@ rno NUMBER(10)
 );
 ```
 
+### 인덱스 생성 문법
+CREATE INDEX 인덱스명 ON 테이블명  (지정할 칼럼명)
+
+### 테이블 생성 시 DELETE 옵션
+1. CASCADE : 부모 삭제 시 자식 행 같이 삭제
+2. SET NULL : 부모 삭제시 자식의 값 null로 변경
+3. SET DEFAULT : 부모 삭제시 자식의 값 default값으로 변경
+4. RESTRICT : 자식의 PK가 없을 때만 부모 삭제를 허용
+5. NO ACTION: 참조 무결성을 위반하는 삭제/수정 허용 X
+
+### 테이블 생성 시 INSERT 옵션
+1. SET NULL : 부모 삽입시 자식의 값 null로 삽입
+2. SET DEFAULT : 부모 삽입시 자식의 값 default값으로 삽입
+3. AUTOMATIC : 부모의 PK가 없을 시 부모의 PK를 생성한 후 자식 삽입
+4. DEPENDENT : 부모의 PK가 없는 경우 자식의 삽입을 허용하지 않음
+
+------------------------------------------------------------------
+
 ## 2. ALTER TABLE : 데이터베이스의 구조를 변경
 ### PK 설정
 - PK 자체에 NOT NULL UNIQUE가 자동으로 걸림
-``` 통째로 외우기
+``` 외우기
 ALTER TABLE board
 ADD CONSTRAINT pk_board_bno
 PRIMARY KEY (bno);
@@ -63,6 +86,7 @@ MODIFY (title VARCHAR2(500));
 - ALTER TABLE board DROP COLUMN view_count;
 - ALTER TABLE board MODIFY (title VARCHAR2(500));
 
+------------------------------------------------------------------
 
 ## 3. DROP TABLE: 테이블 구조 삭제
 - 정보가 있을 경우 모두 날아감, 별도의 조치가 없다면 롤백 불가
@@ -70,6 +94,8 @@ MODIFY (title VARCHAR2(500));
 ```
 - DROP TABLE reply;
 ```
+
+------------------------------------------------------------------
 ## 4. TRUNCATE TABLE: 테이블 내부 전체 삭제
 - 휴지통 비우기랑 비슷, 롤백 불가
 ```
