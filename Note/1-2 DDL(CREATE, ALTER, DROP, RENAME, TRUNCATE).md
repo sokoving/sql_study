@@ -2,11 +2,6 @@
 - [CREATE], [ALTER], [DROP], [RENAME], [TRUNCATE]
 - 데이터 구조를 정의하는 명령어
 - 데이터 구조를 생성(CREATE), 변경(ALTER), 삭제(DROP, TRUNCATE), 이름을 변경(RENAME)한다
------------------------------------------------------------------
-# 메모
-## PK 설정
-
-
 ------------------------------------------------------------------
 ## 1. CREATE TABLE: 테이블을 생성
 ``` CREATE TABLE 테이블명 (컬럼명 제약조건 나열);
@@ -101,8 +96,24 @@ MODIFY (title VARCHAR2(500));
 ```
 - TRUNCATE TABLE reply;
 ```
+-----------------------------------------------------------------
+## PK, FK 설정
+```
+CREATE TABLE pkBoard(
+     pkCol1 CHAR(8) PRIMARY KEY ①
+    , pkCol2 CHAR(8)
+    , pkCol3 number CONSTRAINT pk_pk3 PRIMARY KEY ②
+    , pkCol4 char(8)7
+    , CONSTRAINT pk_pk2 PRIMARY KEY(pkCol2) ③
+);
 
+ALTER TABLE pkBoard
+ADD CONSTRINT pk_pk4 PRIMARY KEY (pkCol4); ④
 
-
-
+ALTER TABLE fkTest ADD CONSTRAINT fk_test FOREIGN KEY (fk_Col) REFERENCES 
+```
+1. 컬럼명 타입 PRIMARY KEY
+2. 컬럼명 타입 CONSTRAINT 제약조건명 PRIMARY KEY
+3. *CONSTRAINT 제약조건명 PRIMARY KEY(컬럼1, 컬럼2...)*
+4. ALTER TABLE 테이블명 ADD CONSTRAINT 제약조건명 PRIMARY KEY (컬럼명);
 
