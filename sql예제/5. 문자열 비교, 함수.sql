@@ -209,9 +209,9 @@ FROM tb_sal;
 -- expr1: Null을 가질 수 있는 값이나 표현식
 -- expr2: expr1이 Null일 경우 대체할 값
 SELECT 
-    emp_no,
-    emp_nm,
-    NVL(direct_manager_emp_no, '최상위관리자') AS 관리자
+    emp_no
+    , emp_nm
+    , NVL(direct_manager_emp_no, '최상위관리자') AS 관리자
 FROM tb_emp;
 
 SELECT 
@@ -225,9 +225,13 @@ FROM tb_emp
 WHERE emp_nm = '김회장'
 ;
 
-
+-- 공집합일 경우 찾을 null도 없음
 SELECT 
+--    emp_nm      -- 공집합 조회
+--    NVL(emp_nm, '존재안함')  -- 공집합이라 찾을 null도 없음
+--    MAX(emp_nm) -- (null)
     NVL(MAX(emp_nm), '존재안함') AS emp_nm
+--    NVL(MIN(emp_nm), '존재안함') AS emp_nm
 FROM tb_emp
 WHERE emp_nm = '박찬호';
 
@@ -241,23 +245,23 @@ FROM tb_emp;
 -- NULLIF(expr1, expr2)
 -- 두 값이 같으면 NULL리턴, 다르면 expr1 리턴
 SELECT
-    NULLIF('박찬호', '박찬호')
+    NULLIF('박찬호', '박찬호') --(null)
 FROM dual;
 
 SELECT
-    NULLIF('박찬호', '박지성')
+    NULLIF('박찬호', '박지성') -- 박찬호
 FROM dual;
 
--- COALESCE(expr1, ...)
+-- COALESCE(expr1, ...)  < 가변인자
 -- 많은 표현식 중 Null이 아닌 값이 최초로 발견되면 해당 값을 리턴
 SELECT 
-    COALESCE(NULL, NULL, 3000, 4000)
+    COALESCE(NULL, NULL, 3000, 4000) -- 3000
 FROM dual;
 
 SELECT 
-    COALESCE(NULL, 5000, NULL, 2000)
+    COALESCE(NULL, 5000, NULL, 2000) -- 5000
 FROM dual;
 
 SELECT 
-    COALESCE(7000, NULL, NULL, 8000)
+    COALESCE(7000, NULL, NULL, 8000) -- 7000
 FROM dual;
