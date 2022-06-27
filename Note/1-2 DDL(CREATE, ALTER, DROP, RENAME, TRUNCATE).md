@@ -48,31 +48,31 @@ CREATE INDEX 인덱스명 ON 테이블명  (지정할 칼럼명)
 ## 2. ALTER TABLE : 데이터베이스의 구조를 변경
 ### PK 설정
 - PK 자체에 NOT NULL UNIQUE가 자동으로 걸림
-``` 외우기
+``` ALTER TABLE 테이블명 ADD CONSTRAINT 제약조건명(임의) PRIMARY KEY (컬럼명);
 ALTER TABLE board
 ADD CONSTRAINT pk_board_bno
 PRIMARY KEY (bno);
 ```
 ### FK 설정
 - 테이블 간의 관계 제약 설정
-```
+``` ALTER TABLE 테이블명 ADD CONSTRAINT 제약조건명(임의) FOREIGN KEY (컬럼명) REFERENCES 테이블명 (컬럼명);
 ALTER TABLE reply
 ADD CONSTRAINT fk_reply_bno
 FOREIGN KEY (bno)
 REFERENCES board (bno);
 ```
 ### 컬럼 변경 - 추가
-```
+``` ALTER TABLE 테이블명 ADD (컬럼명 타입 제약조건);
 ALTER TABLE reply
 ADD (r_reg_date DATE DEFAULT SYSDATE);
 ```
 ### 컬럼 변경 - 제거
-```
+```ALTER TABLE 테이블명 DROP COLUMN 컬럼명;
 ALTER TABLE board
 DROP COLUMN view_count;
 ```
 ### 컬럼 변경 - 수정
-```
+```ALTER TABLE 테이블명 MODIFY (컬럼명 타입);
 ALTER TABLE board
 MODIFY (title VARCHAR2(500));
 ```
@@ -87,14 +87,14 @@ MODIFY (title VARCHAR2(500));
 - 정보가 있을 경우 모두 날아감, 별도의 조치가 없다면 롤백 불가
 - board를 삭제할 때 연동된 reply를 어떻게 할 건지 설정을 안 하면 충돌남
 ```
-- DROP TABLE reply;
+DROP TABLE reply;
 ```
 
 ------------------------------------------------------------------
 ## 4. TRUNCATE TABLE: 테이블 내부 전체 삭제
 - 휴지통 비우기랑 비슷, 롤백 불가
 ```
-- TRUNCATE TABLE reply;
+TRUNCATE TABLE reply;
 ```
 -----------------------------------------------------------------
 ## PK, FK 설정
@@ -103,14 +103,18 @@ CREATE TABLE pkBoard(
      pkCol1 CHAR(8) PRIMARY KEY ①
     , pkCol2 CHAR(8)
     , pkCol3 number CONSTRAINT pk_pk3 PRIMARY KEY ②
-    , pkCol4 char(8)7
+    , pkCol4 char(8)
+    , fkCol5 char(8)
     , CONSTRAINT pk_pk2 PRIMARY KEY(pkCol2) ③
 );
 
 ALTER TABLE pkBoard
 ADD CONSTRINT pk_pk4 PRIMARY KEY (pkCol4); ④
 
-ALTER TABLE fkTest ADD CONSTRAINT fk_test FOREIGN KEY (fk_Col) REFERENCES 
+ALTER TABLE fkTest 
+ADD CONSTRAINT fk_test
+FOREIGN KEY (fk_Col)
+REFERENCES pkBoard (fkCol5)
 ```
 1. 컬럼명 타입 PRIMARY KEY
 2. 컬럼명 타입 CONSTRAINT 제약조건명 PRIMARY KEY
