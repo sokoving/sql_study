@@ -8,8 +8,15 @@
 
 3. 주관식에서 세미콜론 안 쓰면 오답 처리될 수 있음
 
+4. 절대, 항상, 오직, -만 피하기?
 
 # SQL 문장 종류 외우기
 DML : SELECT INSERT UPDATE, DELETE
 DDL : CREATE , ALTER, DROP, RENAME
-DCL 
+DCL :
+TCL : COMMIT ROLLBAK
+
+# 구문 분석 순서
+FROM → ON → JOIN → WHERE → GROUP BY → HAVING
+→ SELECT → DISTINCT → ORDER BY → LIMIT / OFFSET /TOP
+<https://nive.tistory.com/148>
